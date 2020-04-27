@@ -1,0 +1,217 @@
+
+<div class="search-container-margin d-print-none">
+
+	<div
+		class="search-container d-flex flex-column align-items-center justify-content-center">
+
+		<h3 class="font-weight-bolder text-dark mb-5">Try it right now.</h3>
+		<form
+			class="form-inline d-inline-flex justify-content-center search_form"
+			action="" method="GET">
+			<div class="index-input-div">
+				<i class="fa fa-search index-search-input-icon"></i> <input
+					class="form-control index-search-input border-0 form-control-lg source_search_input"
+					type="text"
+					placeholder="Enter instagram username or profile link.."
+					aria-label="Enter twitter username..">
+			</div>
+
+			<button type="submit"
+				class="btn index-submit-button border-0 d-inline-block btn-instagram">Search</button>
+		</form>
+
+	</div>
+
+
+
+	<script defer>
+			    $(document).ready(() => {
+			                $('.source-select-item').on('click', (event) => {
+			            let $this = $(event.currentTarget);
+			            let source = $this.data('source');
+			            let source_content = $this.html();
+			
+			            $this.closest('form').find('.index-source-button').html(source_content).attr('data-source', source);
+			
+			            switch(source) {
+			
+			                                                case 'twitter':
+			                        $this.closest('form').find('.source_search_input').attr('placeholder', 'Enter twitter username..');
+			                        break;
+			                                                                case 'instagram':
+			                        $this.closest('form').find('.source_search_input').attr('placeholder', 'Enter instagram username or profile link..');
+			                        break;
+			                                                                case 'youtube':
+			                        $this.closest('form').find('.source_search_input').attr('placeholder', 'Enter youtube username or channel id..');
+			                        break;
+			                                                                case 'facebook':
+			                        $this.closest('form').find('.source_search_input').attr('placeholder', 'Enter facebook page username..');
+			                        break;
+			                            
+			            }
+			
+			        /* Change the class of the submit button */
+			        $this.closest('form').find('button[type="submit"]').removeClass('btn-facebook btn-youtube btn-twitter btn-instagram btn-twitch btn-pinterest').addClass(`btn-${source}`);
+			
+			        event.preventDefault();
+			    });
+			    
+			        $('.search_form').on('submit', (event) => {
+			
+			            let source = $(event.currentTarget).closest('form').find('.index-source-button').length ? $(event.currentTarget).closest('form').find('.index-source-button').attr('data-source') : "twitter";
+			            let search_input = $(event.currentTarget).find('.source_search_input').val();
+			            let username_array = [];
+			            let is_full_url = false;
+			
+			            switch(source) {
+			                case 'instagram':
+			                    search_input.split('/').forEach((string) => {
+			                        if(string.trim() != '') {
+			                            username_array.push(string);
+			
+			                            if(string.includes('instagram.com')) {
+			                                is_full_url = username_array.length - 1;
+			                            }
+			                        }
+			                    });
+			                    break;
+			
+			                case 'facebook':
+			                    search_input.split('/').forEach((string) => {
+			                        if(string.trim() != '') {
+			                            username_array.push(string);
+			
+			                            if(string.includes('facebook.com')) {
+			                                is_full_url = username_array.length - 1;
+			                            }
+			                        }
+			                    });
+			                    break;
+			
+			                case 'youtube':
+			                    search_input.split('/').forEach((string) => {
+			                        if(string.trim() != '') {
+			                            username_array.push(string);
+			                        }
+			                    });
+			                    break;
+			
+			                case 'twitter':
+			                    search_input.split('/').forEach((string) => {
+			                        if(string.trim() != '') {
+			                            username_array.push(string);
+			
+			                            if(string.includes('twitter.com')) {
+			                                is_full_url = username_array.length - 1;
+			                            }
+			                        }
+			                    });
+			                    break;
+			
+			                case 'twitch':
+			                    search_input.split('/').forEach((string) => {
+			                        if(string.trim() != '') {
+			                            username_array.push(string);
+			
+			                            if(string.includes('twitch.tv')) {
+			                                is_full_url = username_array.length - 1;
+			                            }
+			                        }
+			                    });
+			                    break;
+			
+			                case 'pinterest':
+			                    search_input.split('/').forEach((string) => {
+			                        if(string.trim() != '') {
+			                            username_array.push(string);
+			
+			                            if(string.includes('pinterest.com')) {
+			                                is_full_url = username_array.length - 1;
+			                            }
+			                        }
+			                    });
+			                    break;
+			
+			                case 'mixer':
+			                    search_input.split('/').forEach((string) => {
+			                        if(string.trim() != '') {
+			                            username_array.push(string);
+			
+			                            if(string.includes('mixer.com')) {
+			                                is_full_url = username_array.length - 1;
+			                            }
+			                        }
+			                    });
+			                    break;
+			            }
+			
+			
+			            let username = is_full_url !== false ? username_array[is_full_url + 1] : username_array[username_array.length - 1];
+			
+			            if(username.length > 0) {
+			
+			                setTimeout(() => {
+			                    $('body').fadeOut(() => {
+			                        $('body').html('<div class="vw-100 vh-100 d-flex align-items-center"><div class="col-2 text-center mx-auto" style="width: 3rem; height: 3rem;"><div class="spinner-grow"><span class="sr-only">Loading...</span></div></div></div>').show();
+			                    });
+			
+			                    setTimeout(() => window.location.href = `http://localhost:8011/client/report/${username}`, 100)
+			                }, 0)
+			
+			            }
+			
+			            event.preventDefault();
+			        });
+			    })
+			</script>
+</div>
+
+
+
+
+<script src="resources/js/aos.min.js"></script>
+<script>
+    $(document).ready(() => {
+        AOS.init({
+            delay: 50,
+            duration: 600
+        });
+    });
+</script>
+
+
+<footer class="container">
+	<div class="d-flex justify-content-between sticky-footer">
+		<div class="col-md-9 px-0">
+
+			<div>
+				<span>Copyright &copy; 2020 Instagram Analyzer. Inspired by <a
+					href="http://codecanyon.net/user/altumcode/">AltumCode</a></span>
+			</div>
+
+
+			<a href="#" class="mr-3">Terms of Service</a>&nbsp; <a href="#"
+				class="mr-3">Popular Instagram Lists</a>&nbsp; <a href="#"
+				class="mr-3">Contact Us</a>&nbsp;
+
+		</div>
+
+		<div class="col-auto px-0">
+			<p class="mt-3 mt-md-0">
+				<span class="fa-stack mx-1"><a href="#" class="icon-facebook"
+					rel="nofollow" data-toggle="tooltip" title="Facebook"><i
+						class="fab fa-facebook"></i></a></span><span class="fa-stack mx-1"><a
+					href="#" class="icon-twitter" rel="nofollow" data-toggle="tooltip"
+					title="Twitter"><i class="fab fa-twitter"></i></a></span><span
+					class="fa-stack mx-1"><a href="#" class="icon-instagram"
+					rel="nofollow" data-toggle="tooltip" title="Instagram"><i
+						class="fab fa-instagram"></i></a></span>
+			</p>
+		</div>
+
+	</div>
+</footer>
+
+
+</body>
+</html>

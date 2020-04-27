@@ -21,24 +21,26 @@ public class Report {
 		return "index";
 	}
 	
+	
 	@GetMapping("/report")
-	public String showReport() {
-		return "report";
+	public String showReport(@RequestParam String username) {
+		return "redirect:/report/" + username;
 	}
+	
 	
 	@PostMapping("/report")
 	public String submitReport(@RequestParam String username) {
 		
-		return "redirect:/result/" + username;
+		return "redirect:/report/" + username;
 	}
 	
-	@GetMapping("/result/{username}")
+	@GetMapping("/report/{username}")
 	public String showResult(@PathVariable String username, ModelMap model) {
 		InstagramSearchUsernameResult response =  scraperServiceClient.getSearchedUser(username);
 		
 		if (response == null) 	model.put("user",null);
 		else 					model.put("user",response.getUser());
 		
-		return "result";
+		return "report";
 	}
 }
