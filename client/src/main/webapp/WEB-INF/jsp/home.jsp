@@ -75,12 +75,12 @@
 
                 
                 <div class="index-search" data-aos="fade-down" data-aos-delay="300">
-                    <form class="form-inline d-inline-flex <%-- search_form --%>" action="report" method="post">
-                        
+                    <form class="form-inline d-inline-flex search_form" action="report" method="POST">
                         <div class="index-input-div">
                             <i class="fa fa-search index-search-input-icon"></i>
                             <input class="form-control index-search-input border-0 form-control-lg source_search_input" 
-                            	name="username" type="text" placeholder="Enter instagram username or profile link.." aria-label="Enter twitter username..">
+                            	name="username" type="text" placeholder="Enter instagram username or profile link.."
+                            	aria-label="Enter twitter username..">
                         </div>
 
                         <button type="submit" class="btn index-submit-button border-0 d-inline-block btn-instagram">Search</button>
@@ -130,7 +130,7 @@
                         </p>
 
                         <h1>
-                            <a class="text-dark" href="report/therock/instagram">therock</a>
+                            <a class="text-dark" href="report/therock">therock</a>
 
                             
                                                             <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
@@ -180,7 +180,7 @@
                         </p>
 
                         <h1>
-                            <a class="text-dark" href="report/cristiano/instagram">Cristiano Ronaldo</a>
+                            <a class="text-dark" href="report/cristiano">Cristiano Ronaldo</a>
 
                             
                                                             <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
@@ -230,7 +230,7 @@
                         </p>
 
                         <h1>
-                            <a class="text-dark" href="report/taylorswift/instagram">Taylor Swift</a>
+                            <a class="text-dark" href="report/taylorswift">Taylor Swift</a>
 
                             
                                                             <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
@@ -280,7 +280,7 @@
                         </p>
 
                         <h1>
-                            <a class="text-dark" href="report/leomessi/instagram">Leo Messi</a>
+                            <a class="text-dark" href="report/leomessi">Leo Messi</a>
 
                             
                                                             <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
@@ -331,7 +331,7 @@
                         </p>
 
                         <h1>
-                            <a class="text-dark" href="report/kimkardashian/instagram">Kim Kardashian West</a>
+                            <a class="text-dark" href="report/kimkardashian">Kim Kardashian West</a>
 
                             
                                                             <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
@@ -381,7 +381,7 @@
                         </p>
 
                         <h1>
-                            <a class="text-dark" href="report/9gag/instagram">9GAG: Go Fun The World</a>
+                            <a class="text-dark" href="report/9gag">9GAG: Go Fun The World</a>
 
                             
                                                             <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
@@ -430,7 +430,7 @@
                         </p>
 
                         <h1>
-                            <a class="text-dark" href="report/katyperry/instagram">KATY PERRY</a>
+                            <a class="text-dark" href="report/katyperry">KATY PERRY</a>
 
                             
                                                             <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>

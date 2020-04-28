@@ -12,15 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jalizadeh.sbia.client.data.ScraperServiceClient;
 
 @Controller
-public class Report {
+public class ReportController {
 	@Autowired
 	private ScraperServiceClient scraperServiceClient;
-	
-	@GetMapping("/")
-	public String index() {
-		return "index";
-	}
-	
 	
 	@GetMapping("/report")
 	public String showReport(@RequestParam String username) {
@@ -36,6 +30,9 @@ public class Report {
 	
 	@GetMapping("/report/{username}")
 	public String showResult(@PathVariable String username, ModelMap model) {
+		//check if data is already in DB & not OLD, then fetch new data
+		//if user is private, no COMPLETE data available
+		
 		InstagramSearchUsernameResult response =  scraperServiceClient.getSearchedUser(username);
 		
 		if (response == null) 	model.put("user",null);

@@ -355,6 +355,10 @@ a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.acti
 	font-size: 23px !important;
 	color: #3794D8;
 }
+.user-business-badge {
+	font-size: 23px !important;
+	color: #3794D8;
+}
 .owner-verified-badge {
 	font-size: 23px !important;
 	color: #3eb374;
