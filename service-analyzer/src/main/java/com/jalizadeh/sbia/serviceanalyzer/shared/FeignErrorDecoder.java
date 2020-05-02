@@ -1,4 +1,4 @@
-package com.jalizadeh.sbia.client.shared;
+package com.jalizadeh.sbia.serviceanalyzer.shared;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,7 +16,7 @@ public class FeignErrorDecoder implements ErrorDecoder{
 				break;
 				
 			case 404:
-				if (methodKey.contains("analyzeByUsername")) {
+				if (methodKey.contains("scrapeByUsername")) {
 					return new ResponseStatusException(
 							HttpStatus.valueOf(response.status()), response.reason());
 				}

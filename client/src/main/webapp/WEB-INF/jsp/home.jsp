@@ -133,7 +133,7 @@
                             <a class="text-dark" href="report/therock">therock</a>
 
                             
-                                                            <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
+                           <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
                                                     </h1>
 
                         <small class="text-muted">mana. gratitude. tequila ?</small>

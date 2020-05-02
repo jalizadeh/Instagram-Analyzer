@@ -1,49 +1,55 @@
-### Spring Boot Instagram Analyzer
+# Spring Boot Instagram Analyzer
 
 A Spring Boot web application for analyzing and getting report of any public page on [Instagram](https://instagram.com/), based on **microservice** structure.
 
 
-### Services
+## Services
 
 [Eureka Discovery]()
--- All services are connected to this to be discovered by one integrated service for solving load balancing issues
+- All services are connected to this to be discovered by one integrated service for solving load balancing issues
 
 [Zuul API Gateway]()
--- Routes the users requests to the appropriate service
+- Routes the users requests to the appropriate service
 
 [Client]()
--- The client-side shown to the end-user
+- The client-side shown to the end-user
+
+[Analyzer]()
+- Recieves raw data from `Scraper` and gives analyzed data to client
 
 [Scraper]()
--- Scrapes information of the requested user and returns to `client`
--- At startup, it logins to Instagram server, so the `username` and `password` must be provided for the scraper user in `application.properties`.
+- Scrapes information of the requested user and returns to `Analyzer`
+- At startup, it logins to Instagram server, so the `username` and `password` of an Instagram user must be provided in `application.properties`.
 
 
-### How To Run:
+## How To Run:
 
 Services must be run in the following order:
 1. Eureka Discovery
 2. Zuul API Gateway
 3. Scraper
-4. Client
+4. Analyzer
+5. Client
 
+Wait for one minute, then check [http://localhost:8011/client](http://localhost:8011/client)
 
-### Endpoints:
+## Endpoints:
 
 |  Service | URL  |
 | :------------ | :------------ |
 | Eureka Discovery | http://localhost:8010  |
 | Zuul API Gateway  | http://localhost:8011  |
-| Scraper |  http://localhost:8011/reporter/{username}  |
-| Client  | http://localhost:8011/client  |
+| Analyzer |  http://localhost:8011/analyzeByUsername/{username}  |
+| Scraper |  http://localhost:8011/scrapeByUsername/{username}  |
+| Client  | http://localhost:8011/client |
 
 
-### Application Structure:
+## Application Structure:
 
-Open the file in [draw.io](https://app.diagrams.net/)
+Open the file *Application Structure* in [draw.io](https://app.diagrams.net/)
 
 
-#### Project Metadata
+## Project Metadata
 
 | Meta  |  Value |
 | :------------ | :------------: |

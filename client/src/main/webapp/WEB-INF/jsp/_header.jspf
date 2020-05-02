@@ -11,7 +11,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Home - Instagram Analyzer</title>
-	<base href="http://localhost:8011/client/">
+	<base href="http://localhost:8011/client/" target="_blank">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

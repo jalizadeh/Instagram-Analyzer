@@ -8,44 +8,28 @@ import org.brunocvcunha.instagram4j.requests.payload.InstagramUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.jalizadeh.sbia.client.model.InstagramLogModel;
 import com.jalizadeh.sbia.client.payload.InstagramLogPayload;
 import com.jalizadeh.sbia.client.repository.InstagramLogRepository;
 import com.jalizadeh.sbia.client.request.AnalyzerServiceFeignClient;
 
-@Controller
-public class ReportController {
+@RestController
+public class TestController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private AnalyzerServiceFeignClient analyzerServiceClient;
-	
+
 	@Autowired
 	private InstagramLogRepository iLogRepository;
 
-	@GetMapping("/report")
-	public String showReport(@RequestParam String username) {
-		return "redirect:/report/" + username;
-	}
-
-	@PostMapping("/report")
-	public String submitReport(@RequestParam String username) {
-
-		return "redirect:/report/" + username;
-	}
-
-	/*
-	@GetMapping("/report/{username}")
-	public String showResult(@PathVariable String username, ModelMap model) {
-		// check if data is already in DB & not OLD, then ask analyzer for new data
-		// if user is private, no COMPLETE data available
+	// in client, I only check if there is any data in last 1 hour in my DB
+	@GetMapping("/t/{username}")
+	public InstagramLogPayload checklog(@PathVariable String username) {
 
 		// calculate some basic dates
 		Date now = new Date();
@@ -72,15 +56,15 @@ public class ReportController {
 		} else {
 			logger.info("nothing in last 1 hour, lets get new data");
 
-			InstagramLogPayload analyzedUser = 
-					analyzerServiceClient.analyzeByUsername(username);
-			
-			user = analyzedUser.getUser();
+			InstagramLogPayload analyzedUser = analyzerServiceClient.analyzeByUsername(username);
+			// user = scrapedUser.getUser();
 
-			dbResult = new InstagramLogModel(user.getPk(), user.getUsername(),
-					new Long(user.getFollower_count()),
-					new Long(user.getFollowing_count()),
-					new Long(user.getMedia_count()), new Date());
+			dbResult = new InstagramLogModel(analyzedUser.getInstagramUserId(),
+					analyzedUser.getInstagramUsername(),
+					analyzedUser.getFollowers(),
+					analyzedUser.getFollowings(), 
+					analyzedUser.getUploads(), 
+					analyzedUser.getLastCheckDate());
 
 			InstagramLogModel logOfToday = iLogRepository.findByInstagramUsernameAndLastCheckDateBetween(username,
 					today000, now);
@@ -95,22 +79,10 @@ public class ReportController {
 			}
 		}
 
-		return InstagramLogPayload.builder().instagramUserId(new Long(dbResult.getInstagramUserId()))
+		return InstagramLogPayload.builder()
+				.instagramUserId(new Long(dbResult.getInstagramUserId()))
 				.instagramUsername(dbResult.getInstagramUsername()).followers(new Long(dbResult.getFollowers()))
 				.followings(new Long(dbResult.getFollowings())).uploads(new Long(dbResult.getUploads()))
 				.lastCheckDate(dbResult.getLastCheckDate()).build();
-
-		
-
-		if (response == null)
-			model.put("user", null);
-		else
-			model.put("user", response.getUser());
-
-		return "report";
 	}
-	
-	*/
-	
-	
 }
