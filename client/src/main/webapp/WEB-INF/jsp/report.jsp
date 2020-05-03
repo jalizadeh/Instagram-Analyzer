@@ -1,12 +1,53 @@
 <%@ include file="_header.jspf"%>
 
-<link href="resources/css/datepicker.min.css" rel="stylesheet"
-	media="screen,print">
+<link href="resources/css/datepicker.min.css" rel="stylesheet" media="screen,print">
 <script src="resources/js/datepicker.min.js"></script>
 <script src="resources/js/i18n/datepicker.en.js"></script>
 <script src="resources/js/Chart.bundle.min.js"></script>
 
 <link rel="canonical" href="http://localhost:8011/report/${user.username}" />
+
+<script src="resources/Highchart-8.0.4/highcharts.js"></script>
+<script src="resources/Highchart-8.0.4/modules/series-label.js"></script>
+<script src="resources/Highchart-8.0.4/modules/exporting.js"></script>
+<script src="resources/Highchart-8.0.4/modules/export-data.js"></script>
+<script src="resources/Highchart-8.0.4/modules/accessibility.js"></script>
+
+<style type="text/css">
+	.highcharts-figure, .highcharts-data-table table {
+	    min-width: 360px; 
+	    max-width: 800px;
+	    margin: 1em auto;
+	}
+	
+	.highcharts-data-table table {
+		font-family: Verdana, sans-serif;
+		border-collapse: collapse;
+		border: 1px solid #EBEBEB;
+		margin: 10px auto;
+		text-align: center;
+		width: 100%;
+		max-width: 500px;
+	}
+	.highcharts-data-table caption {
+	    padding: 1em 0;
+	    font-size: 1.2em;
+	    color: #555;
+	}
+	.highcharts-data-table th {
+		font-weight: 600;
+	    padding: 0.5em;
+	}
+	.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+	    padding: 0.5em;
+	}
+	.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+	    background: #f8f8f8;
+	}
+	.highcharts-data-table tr:hover {
+	    background: #f1f7ff;
+	}
+</style>
 
 <%@ include file="_navigation.jspf"%>
 
@@ -143,16 +184,80 @@
 	</div>
 	
 	
-	<div class="container">
-		<c:forEach items="${logs}" var="log">
-			${log.lastCheckDate} 
-			<br/>
-		</c:forEach>
+	<div class="row my-5">
+		<div class="col">
+			<div id="chartFollower"></div>
+		</div>
+		
+		<div class="col">
+			<div id="chartFollowing"></div>
+		</div>
 	</div>
-
-
+	
 </div>
 
+<script type="text/javascript">
+	Highcharts.chart('chartFollower', {
+		chart: { type: 'line' },
+	    title: { text: 'Followers' },
+	    yAxis: { title: {  text: '' }  },
+	    xAxis: {
+	        categories: [
+	        	<c:forEach items="${logs}" var="log">
+					'<fmt:formatDate value="${log.lastCheckDate}" pattern="yyyy-MM-dd" />',
+				</c:forEach>
+	        ]
+	    },
+	    legend: {  layout: 'vertical', align: 'right',  verticalAlign: 'middle' },
+	    plotOptions: { series: {  label: { connectorAllowed: false } }  },
+	    series: [{
+	        name: 'Followers',
+	        data: [
+				<c:forEach items="${logs}" var="log">
+					${log.followers},
+				</c:forEach>
+			]
+	    }],
+	    responsive: {
+	        rules: [{
+	            condition: {  maxWidth: 500 },
+	            chartOptions: { legend: { layout: 'horizontal', align: 'center',  verticalAlign: 'bottom' }}
+	        }]
+	    }
+	});
+</script>
+
+
+<script type="text/javascript">
+	Highcharts.chart('chartFollowing', {
+		chart: { type: 'line' },
+	    title: { text: 'Followings' },
+	    yAxis: { title: {  text: '' }  },
+	    xAxis: {
+	        categories: [
+	        	<c:forEach items="${logs}" var="log">
+					'<fmt:formatDate value="${log.lastCheckDate}" pattern="yyyy-MM-dd" />',
+				</c:forEach>
+	        ]
+	    },
+	    legend: {  layout: 'vertical', align: 'right',  verticalAlign: 'middle' },
+	    plotOptions: { series: {  label: { connectorAllowed: false } }  },
+	    series: [{
+	        name: 'Followings',
+	        data: [
+				<c:forEach items="${logs}" var="log">
+					${log.followings},
+				</c:forEach>
+			]
+	    }],
+	    responsive: {
+	        rules: [{
+	            condition: {  maxWidth: 500 },
+	            chartOptions: { legend: { layout: 'horizontal', align: 'center',  verticalAlign: 'bottom' }}
+	        }]
+	    }
+	});
+</script>
 
 
 

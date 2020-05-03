@@ -90,13 +90,13 @@ public class ReportController {
 
 		logger.info("The user: " + username + " already exist in DB");
 
-		List<InstagramLogModel> dbLogs = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
+		List<InstagramLogModel> dbLogsDesc = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
 
 		// there is fresh data
 		if (now.getTime() - dbUser.getLastCheckDate().getTime() < ONE_HOUR) {
 			logger.info("The data is fresh, no need for new check.");
 			model.put("user", dbUser);
-			model.put("logs", dbLogs);
+			model.put("logs", iLogRepository.findByPkOrderByLastCheckDateAsc(dbUser.getPk()));
 			return "report";
 		}
 
@@ -124,14 +124,14 @@ public class ReportController {
 			iUserRepository.save(updatedUser);
 		} else {
 			logger.info("there is already done for today, get it, replace with new data");
-			mostRecentLog.setId(dbLogs.get(0).getId());
+			mostRecentLog.setId(dbLogsDesc.get(0).getId());
 			iLogRepository.save(mostRecentLog);
 			iUserRepository.save(updatedUser);
 		}
 		
-		dbLogs = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
+		dbLogsDesc = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
 		model.put("user", dbUser);
-		model.put("logs", dbLogs);
+		model.put("logs", dbLogsDesc);
 		return "report";
 	}
 

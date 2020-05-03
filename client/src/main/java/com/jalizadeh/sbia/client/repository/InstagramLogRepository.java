@@ -11,6 +11,8 @@ public interface InstagramLogRepository extends JpaRepository<InstagramLogModel,
 	
 	List<InstagramLogModel> findByPkOrderByLastCheckDateDesc(long pk);
 	
+	List<InstagramLogModel> findByPkOrderByLastCheckDateAsc(long pk);
+	
 	InstagramLogModel findByUsernameAndLastCheckDateBetween(String username, Date start, Date end);
 	
 }
