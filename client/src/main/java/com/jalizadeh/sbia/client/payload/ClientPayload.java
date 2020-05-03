@@ -1,4 +1,4 @@
-package com.jalizadeh.sbia.serviceanalyzer.payload;
+package com.jalizadeh.sbia.client.payload;
 
 import java.util.List;
 

@@ -6,8 +6,7 @@
 <script src="resources/js/i18n/datepicker.en.js"></script>
 <script src="resources/js/Chart.bundle.min.js"></script>
 
-<link rel="canonical"
-	href="http://localhost:8011/report/${user.username}" />
+<link rel="canonical" href="http://localhost:8011/report/${user.username}" />
 
 <%@ include file="_navigation.jspf"%>
 
@@ -18,13 +17,14 @@
 			<div class="d-flex flex-column flex-sm-row flex-wrap">
 
 				<div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-					<img src="${user.profile_pic_url}" class="img-fluid rounded-circle instagram-avatar" alt="${user.username}" />
+					<img src="${user.profilePicUrl}" class="img-fluid rounded-circle instagram-avatar" alt="${user.username}" />
 
-					<span class="fa-stack fa-xs source-badge-position"
-						style="vertical-align: top;"> <i
+					<a class="fa-stack fa-xs source-badge-position"
+						style="vertical-align: top;"
+						href="${user.hdProfilePicUrl}"> <i
 						class="fas fa-circle text-instagram fa-stack-2x"></i> <i
 						class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-					</span>
+					</a>
 				</div>
 
 				<div
@@ -36,16 +36,16 @@
 						</p>
 
 					<h1>
-						${user.full_name}
+						${user.fullName}
 	
-						<c:if test="${user.is_verified()}">
+						<c:if test="${user.isVerified()}">
 							<span class="align-self-center ml-3" data-toggle="tooltip"
 							 title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i>
 							</span>
 						</c:if>
 	
 	
-						<c:if test="${user.is_business()}">
+						<c:if test="${user.isBusiness()}">
 							<span class="align-self-center ml-3" data-toggle="tooltip"
 								title="Bussiness Profile"><i
 								class="fa fa-user-tie user-business-badge"></i>
@@ -69,17 +69,17 @@
 					class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
 					<div class="col d-flex flex-column justify-content-center">
 						Followers
-						<p class="report-header-number">${user.follower_count}</p>
+						<p class="report-header-number">${user.followers}</p>
 					</div>
 
 					<div class="col d-flex flex-column justify-content-center">
 						Followings
-						<p class="report-header-number">${user.following_count}</p>
+						<p class="report-header-number">${user.followings}</p>
 					</div>
 					
 					<div class="col d-flex flex-column justify-content-center">
 						Uploads
-						<p class="report-header-number">${user.media_count}</p>
+						<p class="report-header-number">${user.uploads}</p>
 					</div>
 
 				</div>
@@ -124,16 +124,16 @@
 						<span class="align-self-center" data-toggle="tooltip" title="${user.category}">
 							<i class="fa fa-list-alt"></i></span>
 						
-						<c:if test="${not empty user.external_url}">
-							 <a href="${user.external_url}"><i class="fas fa-link"></i></a>
+						<c:if test="${not empty user.externalUrl}">
+							 <a href="${user.externalUrl}"><i class="fas fa-link"></i></a>
 						</c:if>
 						
 						<c:if test="${not empty user.latitude and not empty user.longitude}">
 							 <a href="https://www.google.com/maps/place/${user.latitude},${user.longitude}"><i class="fas fa-map-marker-alt"></i></a>
 						</c:if>
 						
-						<c:if test="${not empty user.public_email}">
-							 <a href="mailto:${user.public_email}?subject=Hi"><i class="fas fa-at"></i></a>
+						<c:if test="${not empty user.email}">
+							 <a href="mailto:${user.email}?subject=Hi"><i class="fas fa-at"></i></a>
 						</c:if>
 						 
 					</p>
@@ -142,6 +142,13 @@
 		</div>
 	</div>
 	
+	
+	<div class="container">
+		<c:forEach items="${logs}" var="log">
+			${log.lastCheckDate} 
+			<br/>
+		</c:forEach>
+	</div>
 
 
 </div>
@@ -151,10 +158,7 @@
 
 <div class="container mt-5">
 	<div class="d-flex flex-column">
-		<small class="text-muted">Last successful check date:
-			2020-04-27 18:07:12</small> <small class="text-muted">Last check
-			date: 2019-08-21 16:54:32</small> <small class="text-muted">Time
-			Zone: Europe/London</small>
+		<small class="text-muted">Last check date: ${user.lastCheckDate}</small>
 	</div>
 </div>
 

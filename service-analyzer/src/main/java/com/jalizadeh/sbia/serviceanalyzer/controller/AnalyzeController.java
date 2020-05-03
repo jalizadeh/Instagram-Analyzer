@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jalizadeh.sbia.serviceanalyzer.model.InstagramLogModel;
 import com.jalizadeh.sbia.serviceanalyzer.model.InstagramUserModel;
 import com.jalizadeh.sbia.serviceanalyzer.payload.ClientPayload;
-import com.jalizadeh.sbia.serviceanalyzer.payload.InstagramAnalyzedUserPayload;
+import com.jalizadeh.sbia.serviceanalyzer.payload.InstagramUserPayload;
 import com.jalizadeh.sbia.serviceanalyzer.payload.InstagramLogPayload;
 import com.jalizadeh.sbia.serviceanalyzer.repository.InstagramLogRepository;
 import com.jalizadeh.sbia.serviceanalyzer.repository.InstagramUserRepository;
@@ -45,7 +45,6 @@ public class AnalyzeController {
 	public ClientPayload analyzeByUsername(@PathVariable String username) {
 
 		Date now = new Date();
-		//Date oneHourBefore = new Date(System.currentTimeMillis() - 3600 * 1000);
 		Date today000 = getMidnightHour().getTime();
 
 		InstagramSearchUsernameResult scrapedData = null;
@@ -67,11 +66,11 @@ public class AnalyzeController {
 			scrapedUser = scrapedData.getUser();
 
 			logger.info("Creating new record for " + username);
-			InstagramUserModel convertedUser = convertInstagramUserPayloadToMyUserModel(scrapedUser, now);
+			InstagramUserModel convertedUser = convertScrapedUserToUserModel(scrapedUser, now);
 			iUserRepository.save(convertedUser);
 
 			logger.info("Creating new log for " + username);
-			InstagramLogModel newLog = createLogModelOfUser(scrapedUser, now);
+			InstagramLogModel newLog = createLogModelOfScrapedUser(scrapedUser, now);
 			iLogRepository.save(newLog);
 
 			logger.info("Returning data to client of " + username);
@@ -80,7 +79,7 @@ public class AnalyzeController {
 
 		logger.info("The user: " + username + " already exist in DB");
 		
-		List<InstagramLogModel> dbLogs = iLogRepository.findByPk(dbUser.getPk());
+		List<InstagramLogModel> dbLogs = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
 
 		// there is fresh data
 		if (now.getTime() - dbUser.getLastCheckDate().getTime() < ONE_HOUR) {
@@ -96,8 +95,8 @@ public class AnalyzeController {
 		
 		//? what if user doesn't exist anymore ?
 
-		InstagramLogModel newLog = createLogModelOfUser(scrapedUser, now);
-		InstagramUserModel updatedUser = convertInstagramUserPayloadToMyUserModel(scrapedUser, now);
+		InstagramLogModel newLog = createLogModelOfScrapedUser(scrapedUser, now);
+		InstagramUserModel updatedUser = convertScrapedUserToUserModel(scrapedUser, now);
 		updatedUser.setId(dbUser.getId());
 
 		//is there any previous log for Today?
@@ -115,7 +114,7 @@ public class AnalyzeController {
 			iUserRepository.save(updatedUser);
 		}
 		
-		List<InstagramLogModel> allLogs = iLogRepository.findByPk(dbUser.getPk());
+		List<InstagramLogModel> allLogs = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
 		return createClientPayload(updatedUser, allLogs);
 
 	}
@@ -143,8 +142,8 @@ public class AnalyzeController {
 		return new ClientPayload(convertUserModelToPayload(user), logList);
 	}
 
-	private InstagramAnalyzedUserPayload convertUserModelToPayload(InstagramUserModel user) {
-		return new InstagramAnalyzedUserPayload(user.getPk(), user.getUsername(), user.getFullName(), user.isPrivate(),
+	private InstagramUserPayload convertUserModelToPayload(InstagramUserModel user) {
+		return new InstagramUserPayload(user.getPk(), user.getUsername(), user.getFullName(), user.isPrivate(),
 				user.isVerified(), user.isBusiness(), new Long(user.getFollowers()), new Long(user.getFollowings()),
 				new Long(user.getUploads()), new Long(user.getUsertags()), user.getBiography(), user.getCategory(),
 				user.getExternalUrl(), user.getPhoneCountryCode(), user.getPhoneNumber(), user.getEmail(),
@@ -152,12 +151,12 @@ public class AnalyzeController {
 				user.getProfilePicUrl(), user.getHdProfilePicUrl(), user.getLastCheckDate());
 	}
 
-	private InstagramLogModel createLogModelOfUser(InstagramUser user, Date newCheckDate) {
+	private InstagramLogModel createLogModelOfScrapedUser(InstagramUser user, Date newCheckDate) {
 		return new InstagramLogModel(user.getPk(), user.getUsername(), new Long(user.getFollower_count()),
 				new Long(user.getFollowing_count()), new Long(user.getMedia_count()), newCheckDate);
 	}
 
-	private InstagramUserModel convertInstagramUserPayloadToMyUserModel(InstagramUser user, Date newCheckDate) {
+	private InstagramUserModel convertScrapedUserToUserModel(InstagramUser user, Date newCheckDate) {
 		return new InstagramUserModel(null, user.getPk(), user.getUsername(), user.getFull_name(), user.is_private(),
 				user.is_verified(), user.is_business(), user.getFollower_count(), user.getFollowing_count(),
 				user.getMedia_count(), user.getUsertags_count(), user.getBiography(), user.getCategory(),

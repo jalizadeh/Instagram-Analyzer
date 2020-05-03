@@ -10,7 +10,7 @@ import com.jalizadeh.sbia.serviceanalyzer.model.InstagramLogModel;
 
 public interface InstagramLogRepository extends JpaRepository<InstagramLogModel, Long>{
 	
-	List<InstagramLogModel> findByPk(long pk);
+	List<InstagramLogModel> findByPkOrderByLastCheckDateDesc(long pk);
 	
 	InstagramLogModel findByUsernameAndLastCheckDateBetween(String username, Date start, Date end);
 	

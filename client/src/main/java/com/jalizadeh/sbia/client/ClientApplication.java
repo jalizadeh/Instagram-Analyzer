@@ -25,12 +25,6 @@ public class ClientApplication {
 
 	
 	@Bean
-	@LoadBalanced
-	public RestTemplate getRestTemplate() {
-		return new RestTemplate();
-	}
-	
-	@Bean
 	Logger.Level feignLoggerLevel(){
 		return Logger.Level.FULL;
 	}

@@ -9,26 +9,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name="instagram_logs")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class InstagramLogModel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(unique = true, name="instagram_userid")
-	private Long instagramUserId;
+	private Long pk;
 	
-	@Column(unique = true, name="instagram_username")
-	private String instagramUsername;
+	private String username;
 	
 	private Long followers;
 	
@@ -38,15 +36,4 @@ public class InstagramLogModel {
 	
 	@Column(name="last_check_date")
 	private Date lastCheckDate;
-
-	public InstagramLogModel(Long instagramUserId, String instagramUsername, Long followers, 
-			Long followings, Long uploads, Date lastCheckDate) {
-		super();
-		this.instagramUserId = instagramUserId;
-		this.instagramUsername = instagramUsername;
-		this.followers = followers;
-		this.followings = followings;
-		this.uploads = uploads;
-		this.lastCheckDate = lastCheckDate;
-	}
 }

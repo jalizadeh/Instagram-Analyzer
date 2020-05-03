@@ -3,7 +3,6 @@ package com.jalizadeh.sbia.client.controller;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +26,9 @@ public class TestController {
 	@Autowired
 	private InstagramLogRepository iLogRepository;
 
+	/*
 	// in client, I only check if there is any data in last 1 hour in my DB
-	@GetMapping("/t/{username}")
+	@GetMapping("/test/{username}")
 	public InstagramLogPayload checklog(@PathVariable String username) {
 
 		// calculate some basic dates
@@ -59,8 +59,8 @@ public class TestController {
 			InstagramLogPayload analyzedUser = analyzerServiceClient.analyzeByUsername(username);
 			// user = scrapedUser.getUser();
 
-			dbResult = new InstagramLogModel(analyzedUser.getInstagramUserId(),
-					analyzedUser.getInstagramUsername(),
+			dbResult = new InstagramLogModel(analyzedUser.getPk(),
+					analyzedUser.getUsername(),
 					analyzedUser.getFollowers(),
 					analyzedUser.getFollowings(), 
 					analyzedUser.getUploads(), 
@@ -79,10 +79,8 @@ public class TestController {
 			}
 		}
 
-		return InstagramLogPayload.builder()
-				.instagramUserId(new Long(dbResult.getInstagramUserId()))
-				.instagramUsername(dbResult.getInstagramUsername()).followers(new Long(dbResult.getFollowers()))
-				.followings(new Long(dbResult.getFollowings())).uploads(new Long(dbResult.getUploads()))
-				.lastCheckDate(dbResult.getLastCheckDate()).build();
+		return 	null;
 	}
+	
+	*/
 }

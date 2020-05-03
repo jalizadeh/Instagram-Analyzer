@@ -2,17 +2,15 @@ package com.jalizadeh.sbia.client.payload;
 
 import java.util.Date;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Setter
-@Builder
+@Data
+@AllArgsConstructor
 public class InstagramLogPayload {
-	private Long instagramUserId;
+	private Long pk;
 	
-	private String instagramUsername;
+	private String username;
 	
 	private Long followers;
 	

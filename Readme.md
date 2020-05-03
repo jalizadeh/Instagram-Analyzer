@@ -11,16 +11,15 @@ A Spring Boot web application for analyzing and getting report of any public pag
 [Zuul API Gateway]()
 - Routes the users requests to the appropriate service
 
-[Client]()
-- The client-side shown to the end-user
-
 [Analyzer]()
-- Recieves raw data from `Scraper` and gives analyzed data to client
+- Recieves raw data from `Scraper` and gives analyzed data to `Client`
 
 [Scraper]()
 - Scrapes information of the requested user and returns to `Analyzer`
 - At startup, it logins to Instagram server, so the `username` and `password` of an Instagram user must be provided in `application.properties`.
 
+[Client]()
+- The client-side shown to the end-user
 
 ## How To Run:
 

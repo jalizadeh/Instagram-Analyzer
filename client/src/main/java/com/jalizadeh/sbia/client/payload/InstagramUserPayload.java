@@ -1,4 +1,4 @@
-package com.jalizadeh.sbia.serviceanalyzer.payload;
+package com.jalizadeh.sbia.client.payload;
 
 import java.util.Date;
 
@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class InstagramAnalyzedUserPayload {
+public class InstagramUserPayload {
 
 	private long pk;
 	private String username;

@@ -1,6 +1,5 @@
 package com.jalizadeh.sbia.client.request;
 
-import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.jalizadeh.sbia.client.payload.InstagramLogPayload;
+import com.jalizadeh.sbia.client.payload.ClientPayload;
 
 import feign.FeignException;
 import feign.hystrix.FallbackFactory;
@@ -19,7 +18,7 @@ import feign.hystrix.FallbackFactory;
 public interface AnalyzerServiceFeignClient {
 
 	@GetMapping("/analyzeByUsername/{username}")
-	public InstagramLogPayload analyzeByUsername(@PathVariable String username);
+	public ClientPayload analyzeByUsername(@PathVariable String username);
 }
 
 
@@ -49,7 +48,7 @@ class AnalyzerServiceClientFallback implements AnalyzerServiceFeignClient{
 	}
 
 	@Override
-	public InstagramLogPayload analyzeByUsername(String username) {
+	public ClientPayload analyzeByUsername(String username) {
 
 		if(cause instanceof FeignException && ((FeignException) cause).status() == 404) {
 			logger.error(env.getProperty("spring.application.name") + " > 404 ERROR > analyzeByUsername("
