@@ -38,9 +38,9 @@
         
 	<nav class="navbar navbar-main navbar-expand-lg navbar-light navbar-main-index ">
 	    <div class="container">
-	        <a class="navbar-brand" href="/">
-	                            <img src="resources/img/logo.png" class="img-fluid navbar-logo" alt="Website Logo" />
-	                    </a>
+	        <a class="navbar-brand" href="">
+	           <img src="resources/img/logo.png" class="img-fluid navbar-logo" alt="Website Logo" />
+	        </a>
 	
 	        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_navbar" aria-controls="main_navbar" aria-expanded="false" aria-label="Toggle navigation">
 	            <span class="navbar-toggler-icon"></span>
@@ -107,363 +107,57 @@
     <div class="container index-container-margin-top-big">
         <h2>Example reports</h2>
         <span class="text-muted">Check out some of our demo analytics reports.</span>
-
         
-
-    <div class="card card-shadow mt-5 mb-1 zoomer">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row flex-wrap">
-
-                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-                                            <img src="https://scontent-ort2-1.cdninstagram.com/vp/96cf9923f1e76809975e3543546f4ef8/5E13B1FC/t51.2885-19/11850309_1674349799447611_206178162_a.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com" onerror="$(this).attr('src', ($(this).data('failover')))" data-failover="https://instaanalyzer.com/assets/images/default_avatar.png" class="img-fluid rounded-circle instagram-avatar" alt="therock" />
-                    
-                    <span class="fa-stack fa-xs source-badge-position" style="vertical-align: top;">
-                        <i class="fas fa-circle text-instagram fa-stack-2x"></i>
-                        <i class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-
-                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
-                    <div class="row d-flex flex-column">
-                        <p class="m-0">
-                            <a href="https://instagram.com/therock" target="_blank" class="text-dark" rel="nofollow">@therock</a>
-                        </p>
-
-                        <h1>
-                            <a class="text-dark" href="report/therock">therock</a>
-
-                            
-                           <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
-                                                    </h1>
-
-                        <small class="text-muted">mana. gratitude. tequila ?</small>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
-                    <div class="col d-flex flex-column justify-content-center">
-                        Followers                        <p class="report-header-number">154M</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Uploads                        <p class="report-header-number">4K</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Engagement                        <p class="report-header-number">
-                                                            1.74%
-                                                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<c:forEach items="${topUsers}" var="user">
+		
+		    <div class="card card-shadow mt-5 mb-1 zoomer">
+		        <div class="card-body">
+		            <div class="d-flex flex-column flex-sm-row flex-wrap">
+		                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
+		                 	<img src="${user.profilePicUrl}" 
+		                 	onerror="$(this).attr('src', ($(this).data('failover')))" 
+		                 	data-failover="resources/img/default_avatar.png" 
+		                 	class="img-fluid rounded-circle instagram-avatar" alt="${user.username}" />
+		                </div>
+		
+		                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
+		                    <div class="row d-flex flex-column">
+		                        <p class="m-0">
+		                            <a href="https://instagram.com/${user.username}" target="_blank" 
+		                            class="text-dark" rel="nofollow">@${user.username}</a>
+		                        </p>
+		
+		                        <h1>
+		                           <a class="text-dark" href="report/${user.username}">${user.fullName}</a>
+		                           <c:if test="${user.isVerified()}">
+										<span data-toggle="tooltip" title="Instagram Verified" >
+		                           		 <i class="fa fa-check-circle user-verified-badge"></i>
+		                           		</span>
+									</c:if>
+		                        </h1>
+		
+		                        <small class="text-muted">${user.biography}</small>
+		                    </div>
+		                </div>
+		
+		                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
+		                    <div class="col d-flex flex-column justify-content-center">
+		                        Followers<p class="report-header-number">${user.followers}</p>
+		                    </div>
+		
+		                    <div class="col d-flex flex-column justify-content-center">
+		                        Uploads<p class="report-header-number">${user.uploads }</p>
+		                    </div>
+		
+		                    <div class="col d-flex flex-column justify-content-center">
+		                        Engagement<p class="report-header-number">0.00%</p>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</c:forEach>
     </div>
-    
-    <div class="card card-shadow mt-5 mb-1 zoomer">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row flex-wrap">
-
-                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-                                            <img src="https://scontent-ort2-1.cdninstagram.com/vp/3f516da3d65b81e02983b80c57013db6/5DFA282D/t51.2885-19/s150x150/67310557_649773548849427_4130659181743046656_n.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com" onerror="$(this).attr('src', ($(this).data('failover')))" data-failover="https://instaanalyzer.com/assets/images/default_avatar.png" class="img-fluid rounded-circle instagram-avatar" alt="Cristiano Ronaldo" />
-                    
-                    <span class="fa-stack fa-xs source-badge-position" style="vertical-align: top;">
-                        <i class="fas fa-circle text-instagram fa-stack-2x"></i>
-                        <i class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-
-                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
-                    <div class="row d-flex flex-column">
-                        <p class="m-0">
-                            <a href="https://instagram.com/cristiano" target="_blank" class="text-dark" rel="nofollow">@cristiano</a>
-                        </p>
-
-                        <h1>
-                            <a class="text-dark" href="report/cristiano">Cristiano Ronaldo</a>
-
-                            
-                                                            <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
-                                                    </h1>
-
-                        <small class="text-muted"></small>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
-                    <div class="col d-flex flex-column justify-content-center">
-                        Followers                        <p class="report-header-number">180M</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Uploads                        <p class="report-header-number">2K</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Engagement                        <p class="report-header-number">
-                                                            2.69%
-                                                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-shadow mt-5 mb-1 zoomer">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row flex-wrap">
-
-                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-                                            <img src="https://scontent-ort2-1.cdninstagram.com/vp/ef7f8a7ec6e52600312bc1f2ba573336/5DDC3265/t51.2885-19/s150x150/66510947_638381409990212_7768244753421828096_n.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com" onerror="$(this).attr('src', ($(this).data('failover')))" data-failover="https://instaanalyzer.com/assets/images/default_avatar.png" class="img-fluid rounded-circle instagram-avatar" alt="Taylor Swift" />
-                    
-                    <span class="fa-stack fa-xs source-badge-position" style="vertical-align: top;">
-                        <i class="fas fa-circle text-instagram fa-stack-2x"></i>
-                        <i class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-
-                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
-                    <div class="row d-flex flex-column">
-                        <p class="m-0">
-                            <a href="https://instagram.com/taylorswift" target="_blank" class="text-dark" rel="nofollow">@taylorswift</a>
-                        </p>
-
-                        <h1>
-                            <a class="text-dark" href="report/taylorswift">Taylor Swift</a>
-
-                            
-                                                            <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
-                                                    </h1>
-
-                        <small class="text-muted">New album Lover out 8/23</small>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
-                    <div class="col d-flex flex-column justify-content-center">
-                        Followers                        <p class="report-header-number">120M</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Uploads                        <p class="report-header-number">355</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Engagement                        <p class="report-header-number">
-                                                            0.94%
-                                                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-shadow mt-5 mb-1 zoomer">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row flex-wrap">
-
-                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-                                            <img src="https://scontent-ort2-1.cdninstagram.com/vp/5762d498e98524c7a39de1c3e7516cb1/5DDF72F6/t51.2885-19/s150x150/43818140_2116018831763532_3803033961098117120_n.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com" onerror="$(this).attr('src', ($(this).data('failover')))" data-failover="https://instaanalyzer.com/assets/images/default_avatar.png" class="img-fluid rounded-circle instagram-avatar" alt="Leo Messi" />
-                    
-                    <span class="fa-stack fa-xs source-badge-position" style="vertical-align: top;">
-                        <i class="fas fa-circle text-instagram fa-stack-2x"></i>
-                        <i class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-
-                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
-                    <div class="row d-flex flex-column">
-                        <p class="m-0">
-                            <a href="https://instagram.com/leomessi" target="_blank" class="text-dark" rel="nofollow">@leomessi</a>
-                        </p>
-
-                        <h1>
-                            <a class="text-dark" href="report/leomessi">Leo Messi</a>
-
-                            
-                                                            <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
-                                                    </h1>
-
-                        <small class="text-muted">Bienvenidos a la cuenta oficial de Instagram de Leo Messi / Welcome to the official Leo Messi Instagram account</small>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
-                    <div class="col d-flex flex-column justify-content-center">
-                        Followers                        <p class="report-header-number">128M</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Uploads                        <p class="report-header-number">492</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Engagement                        <p class="report-header-number">
-                                                            4.10%
-                                                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    
-    <div class="card card-shadow mt-5 mb-1 zoomer">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row flex-wrap">
-
-                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-                                            <img src="https://scontent-ort2-1.cdninstagram.com/vp/dcd4fc8ba8696cb384fd5ed61269fa80/5CC2CB2C/t51.2885-19/s150x150/41326196_329788961105496_8866535953355767808_n.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com" onerror="$(this).attr('src', ($(this).data('failover')))" data-failover="https://instaanalyzer.com/assets/images/default_avatar.png" class="img-fluid rounded-circle instagram-avatar" alt="Kim Kardashian West" />
-                    
-                    <span class="fa-stack fa-xs source-badge-position" style="vertical-align: top;">
-                        <i class="fas fa-circle text-instagram fa-stack-2x"></i>
-                        <i class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-
-                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
-                    <div class="row d-flex flex-column">
-                        <p class="m-0">
-                            <a href="https://instagram.com/kimkardashian" target="_blank" class="text-dark" rel="nofollow">@kimkardashian</a>
-                        </p>
-
-                        <h1>
-                            <a class="text-dark" href="report/kimkardashian">Kim Kardashian West</a>
-
-                            
-                                                            <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
-                                                    </h1>
-
-                        <small class="text-muted">KKWBEAUTY.COM</small>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
-                    <div class="col d-flex flex-column justify-content-center">
-                        Followers                        <p class="report-header-number">124M</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Uploads                        <p class="report-header-number">4K</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Engagement                        <p class="report-header-number">
-                                                            2.87%
-                                                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-shadow mt-5 mb-1 zoomer">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row flex-wrap">
-
-                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-                                            <img src="https://scontent-ort2-1.cdninstagram.com/vp/768f85b41f8950b688f66fa134ababc6/5DFAFFFE/t51.2885-19/s150x150/18645376_238828349933616_4925847981183205376_a.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com" onerror="$(this).attr('src', ($(this).data('failover')))" data-failover="https://instaanalyzer.com/assets/images/default_avatar.png" class="img-fluid rounded-circle instagram-avatar" alt="9GAG: Go Fun The World" />
-                    
-                    <span class="fa-stack fa-xs source-badge-position" style="vertical-align: top;">
-                        <i class="fas fa-circle text-instagram fa-stack-2x"></i>
-                        <i class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-
-                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
-                    <div class="row d-flex flex-column">
-                        <p class="m-0">
-                            <a href="https://instagram.com/9gag" target="_blank" class="text-dark" rel="nofollow">@9gag</a>
-                        </p>
-
-                        <h1>
-                            <a class="text-dark" href="report/9gag">9GAG: Go Fun The World</a>
-
-                            
-                                                            <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
-                                                    </h1>
-
-                        <small class="text-muted">? Get our app ??@9gagmobile for the latest MEMES, GIFS and VIDEOS.</small>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
-                    <div class="col d-flex flex-column justify-content-center">
-                        Followers                        <p class="report-header-number">50M</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Uploads                        <p class="report-header-number">20K</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Engagement                        <p class="report-header-number">
-                                                            0.82%
-                                                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card card-shadow mt-5 mb-1 zoomer">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-sm-row flex-wrap">
-
-                <div class="col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center justify-content-sm-start">
-                                            <img src="https://scontent-ort2-1.cdninstagram.com/vp/2bf696dbcf765a4ff75f7ff4ed0ba69b/5DFA727F/t51.2885-19/s150x150/67503014_1183002448573945_7092523054890221568_n.jpg?_nc_ht=scontent-ort2-1.cdninstagram.com" onerror="$(this).attr('src', ($(this).data('failover')))" data-failover="https://instaanalyzer.com/assets/images/default_avatar.png" class="img-fluid rounded-circle instagram-avatar" alt="KATY PERRY" />
-                    
-                    <span class="fa-stack fa-xs source-badge-position" style="vertical-align: top;">
-                        <i class="fas fa-circle text-instagram fa-stack-2x"></i>
-                        <i class="fab fa-fab fa-instagram fa-stack-1x fa-inverse"></i>
-                    </span>
-                </div>
-
-                <div class="col-sm-8 col-md-9 col-lg-5 d-flex justify-content-center justify-content-sm-start">
-                    <div class="row d-flex flex-column">
-                        <p class="m-0">
-                            <a href="https://instagram.com/katyperry" target="_blank" class="text-dark" rel="nofollow">@katyperry</a>
-                        </p>
-
-                        <h1>
-                            <a class="text-dark" href="report/katyperry">KATY PERRY</a>
-
-                            
-                                                            <span data-toggle="tooltip" title="Instagram Verified"><i class="fa fa-check-circle user-verified-badge"></i></span>
-                                                    </h1>
-
-                        <small class="text-muted">✨light worker✨</small>
-
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-5 d-flex justify-content-around align-items-center mt-4 mt-lg-0">
-                    <div class="col d-flex flex-column justify-content-center">
-                        Followers                        <p class="report-header-number">84M</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Uploads                        <p class="report-header-number">1K</p>
-                    </div>
-
-                    <div class="col d-flex flex-column justify-content-center">
-                        Engagement                        <p class="report-header-number">
-                                                            0.34%
-                                                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-
-    </div>
-
 
 
     <div class="container margin-top-6">

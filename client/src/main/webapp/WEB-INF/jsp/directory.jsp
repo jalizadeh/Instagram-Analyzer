@@ -24,8 +24,8 @@
     <div id="results"></div>
 
     <input type="hidden" name="directory_pagination" value="25" />
-    <input type="hidden" name="global_form_token" value="407638e819206c15fee2c97db108c465" />
-    <input type="hidden" name="directory_ajax" value="https://instaanalyzer.com/directory_ajax" />
+    <input type="hidden" name="global_form_token" value="${token}" />
+    <input type="hidden" name="directory_ajax" value="http://localhost:8011/client/directory_ajax" />
 </div>
 
 <script>

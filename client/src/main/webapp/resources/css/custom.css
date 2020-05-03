@@ -682,7 +682,7 @@ a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.acti
 /* Directory */
 .directory-container {
 	width: 100%;
-	background: #1b1e21 url('../images/directory.jpg') 50%;
+	background: #1b1e21 url('../img/directory.jpg') 50%;
 	background-size: cover;
 	min-height: 350px;
 }
