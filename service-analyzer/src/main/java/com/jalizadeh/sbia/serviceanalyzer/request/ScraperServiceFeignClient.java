@@ -1,5 +1,6 @@
 package com.jalizadeh.sbia.serviceanalyzer.request;
 
+import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedResult;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +17,11 @@ import feign.hystrix.FallbackFactory;
 @FeignClient(name="service-scraper", fallbackFactory=ScraperFallbackFactory.class)
 public interface ScraperServiceFeignClient {
 
-	@GetMapping("/scrapeByUsername/{username}")
-	public InstagramSearchUsernameResult scrapeByUsername(@PathVariable String username);
+	@GetMapping("/scrapeUserByUsername/{username}")
+	public InstagramSearchUsernameResult scrapeUserByUsername(@PathVariable String username);
+	
+	@GetMapping("/scrapeFeedByUsername/{username}")
+	public InstagramFeedResult scrapeFeedByUsername(@PathVariable String username);
 }
 
 @Component
@@ -44,12 +48,25 @@ class ScraperServiceClientFallback implements ScraperServiceFeignClient{
 	}
 
 	@Override
-	public InstagramSearchUsernameResult scrapeByUsername(String username) {
+	public InstagramSearchUsernameResult scrapeUserByUsername(String username) {
 		if(cause instanceof FeignException && ((FeignException) cause).status() == 404) {
-			logger.error(env.getProperty("spring.application.name") + " > 404 ERROR > scrapeByUsername("
+			logger.error(env.getProperty("spring.application.name") + " > 404 ERROR > scrapeUserByUsername("
 					 + username + ") . Error message: " + cause.getLocalizedMessage());
 		} else {
-			logger.error(env.getProperty("spring.application.name") + " > Unknown ERROR > scrapeByUsername(" 
+			logger.error(env.getProperty("spring.application.name") + " > Unknown ERROR > scrapeUserByUsername(" 
+					+ username + ") . Error message: " + cause.getLocalizedMessage());
+		}
+		
+		return null;
+	}
+
+	@Override
+	public InstagramFeedResult scrapeFeedByUsername(String username) {
+		if(cause instanceof FeignException && ((FeignException) cause).status() == 404) {
+			logger.error(env.getProperty("spring.application.name") + " > 404 ERROR > scrapeFeedByUsername("
+					 + username + ") . Error message: " + cause.getLocalizedMessage());
+		} else {
+			logger.error(env.getProperty("spring.application.name") + " > Unknown ERROR > scrapeFeedByUsername(" 
 					+ username + ") . Error message: " + cause.getLocalizedMessage());
 		}
 		

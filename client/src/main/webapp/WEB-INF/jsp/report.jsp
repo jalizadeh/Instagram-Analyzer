@@ -12,6 +12,8 @@
 <script src="resources/Highchart-8.0.4/modules/exporting.js"></script>
 <script src="resources/Highchart-8.0.4/modules/export-data.js"></script>
 <script src="resources/Highchart-8.0.4/modules/accessibility.js"></script>
+<script src="resources/Highchart-8.0.4/modules/annotations.js"></script>
+<script src="resources/Highchart-8.0.4/modules/streamgraph.js"></script>
 
 <style type="text/css">
 	.highcharts-figure, .highcharts-data-table table {
@@ -194,6 +196,18 @@
 		</div>
 	</div>
 	
+	<div class="row my-5">
+		<div class="col">
+			<div id="chartLCV"></div>
+		</div>
+	</div>
+	
+	<div class="row my-5">
+		<div class="col">
+			<div id="chartLCVCompound"></div>
+		</div>
+	</div>
+	
 </div>
 
 <script type="text/javascript">
@@ -201,14 +215,12 @@
 		chart: { type: 'line' },
 	    title: { text: 'Followers' },
 	    yAxis: { title: {  text: '' }  },
-	    xAxis: {
-	        categories: [
-	        	<c:forEach items="${logs}" var="log">
-					'<fmt:formatDate value="${log.lastCheckDate}" pattern="yyyy-MM-dd" />',
-				</c:forEach>
-	        ]
-	    },
-	    legend: {  layout: 'vertical', align: 'right',  verticalAlign: 'middle' },
+	    xAxis: { categories: [
+		        	<c:forEach items="${logs}" var="log">
+						'<fmt:formatDate value="${log.lastCheckDate}" pattern="yyyy-MM-dd" />',
+					</c:forEach>
+	        ]},
+	    legend: {  enabled: false },
 	    plotOptions: { series: {  label: { connectorAllowed: false } }  },
 	    series: [{
 	        name: 'Followers',
@@ -233,14 +245,12 @@
 		chart: { type: 'line' },
 	    title: { text: 'Followings' },
 	    yAxis: { title: {  text: '' }  },
-	    xAxis: {
-	        categories: [
-	        	<c:forEach items="${logs}" var="log">
-					'<fmt:formatDate value="${log.lastCheckDate}" pattern="yyyy-MM-dd" />',
-				</c:forEach>
-	        ]
-	    },
-	    legend: {  layout: 'vertical', align: 'right',  verticalAlign: 'middle' },
+	    xAxis: { categories: [
+		        	<c:forEach items="${logs}" var="log">
+						'<fmt:formatDate value="${log.lastCheckDate}" pattern="yyyy-MM-dd" />',
+					</c:forEach>
+	        ]},
+	    legend: {  enabled: false },
 	    plotOptions: { series: {  label: { connectorAllowed: false } }  },
 	    series: [{
 	        name: 'Followings',
@@ -260,6 +270,149 @@
 </script>
 
 
+<script type="text/javascript">
+    Highcharts.chart('chartLCV', {
+        chart: { zoomType: 'x' },
+        title: { text: 'Like, Comment & View' },
+        subtitle: { text: 'Click & Drag to Zoom / Click on dates to visit post' },
+        xAxis: {
+            categories: [
+                <c:forEach items="${feedList}" var="feed">
+                    '<a href="http://www.instagram.com/p/${feed.code}"><fmt:formatDate value="${feed.takenAt}" pattern="yyyy-MM-dd" /></a>',
+                </c:forEach>
+            ]
+        },
+        yAxis: { title: { text: '' } },
+        legend: { align: 'left', verticalAlign: 'top', borderWidth: 0 },
+        tooltip: { shared: true, crosshairs: true },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+        series: [
+            {
+                name: 'Like',
+                data: [
+                    <c:forEach items="${feedList}" var="feed">
+                        ${feed.likeCount},  
+                    </c:forEach>
+                ]
+            },
+            {
+                name: 'Comments',
+                data: [
+                    <c:forEach items="${feedList}" var="feed">
+                        ${feed.commentCount},   
+                    </c:forEach>
+                ]
+            },
+            {
+                name: 'Views',
+                data: [
+                    <c:forEach items="${feedList}" var="feed">
+                        ${feed.viewCount},  
+                    </c:forEach>
+                ]
+            }
+        ]
+    });
+</script>
+
+
+<script type="text/javascript">
+	var colors = Highcharts.getOptions().colors;
+	Highcharts.chart('chartLCVCompound', {
+	    chart: { type: 'streamgraph', marginBottom: 30, zoomType: 'x' },
+	    colors: [ colors[0], colors[1], colors[2], colors[3], colors[4], colors[5],],
+	    title: { floating: true, align: 'left', text: 'Compound Volume of Likes, Comments & Views'},
+	    subtitle: { floating: true, align: 'left', y: 30, text: 'Click & Drag to Zoom / Click on dates to visit post'},
+	    xAxis: {
+	        maxPadding: 0,
+	        type: 'category',
+	        crosshair: true,
+	        categories: [
+	            '',
+	            <c:forEach items="${feedList}" var="feed">
+                    '<a href="http://www.instagram.com/p/${feed.code}"><fmt:formatDate value="${feed.takenAt}" pattern="yyyy-MM-dd" /></a>',
+                </c:forEach>
+	        ],
+	        labels: {
+	            align: 'left',
+	            reserveSpace: false,
+	            rotation: 270
+	        },
+	        lineWidth: 0,
+	        margin: 20,
+	        tickWidth: 0
+	    },
+	
+	    yAxis: {
+	        visible: false,
+	        startOnTick: false,
+	        endOnTick: false
+	    },
+	    legend: {layout: 'vertical', align: 'left', verticalAlign: 'middle', borderWidth: 0 },
+	    plotOptions: {
+	        series: {
+	            label: {
+	                minFontSize: 5,
+	                maxFontSize: 15,
+	                style: { color: 'rgba(255,255,255,0.75)'  }
+	            }
+	        },
+	    },
+	    series: [
+            {
+                name: 'Likes',
+                data: [ 0,
+                    <c:forEach items="${feedList}" var="feed">
+                        ${feed.likeCount},  
+                    </c:forEach>
+                ]
+            },
+            {
+                name: 'Comments',
+                data: [	0,
+                    <c:forEach items="${feedList}" var="feed">
+                        ${feed.commentCount},   
+                    </c:forEach>
+                ]
+            },
+            {
+                name: 'Views',
+                data: [ 0,
+                    <c:forEach items="${feedList}" var="feed">
+                        ${feed.viewCount},  
+                    </c:forEach>
+                ]
+            },
+        ],
+	    exporting: { sourceWidth: 800, sourceHeight: 600 }
+	});
+
+</script>
 
 <div class="container mt-5">
 	<div class="d-flex flex-column">

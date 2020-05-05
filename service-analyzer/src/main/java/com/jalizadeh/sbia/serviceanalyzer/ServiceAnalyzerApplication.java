@@ -6,7 +6,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
-import com.jalizadeh.sbia.serviceanalyzer.shared.FeignErrorDecoder;
+import com.jalizadeh.sbia.serviceanalyzer.utility.FeignErrorDecoder;
 
 import feign.Logger;
 

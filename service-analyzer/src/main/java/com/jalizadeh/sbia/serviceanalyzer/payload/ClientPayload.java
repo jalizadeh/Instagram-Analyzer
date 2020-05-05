@@ -10,4 +10,5 @@ import lombok.Data;
 public class ClientPayload {
 	private InstagramUserPayload analyzedUser;
 	private List<InstagramLogPayload> logs;
+	private List<InstagramFeedPayload> feed;
 }

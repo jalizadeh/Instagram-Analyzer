@@ -2,6 +2,8 @@ package com.jalizadeh.sbia.client.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jalizadeh.sbia.client.model.InstagramLogModel;
 import com.jalizadeh.sbia.client.model.InstagramUserModel;
 import com.jalizadeh.sbia.client.payload.ClientPayload;
+import com.jalizadeh.sbia.client.payload.InstagramFeedPayload;
 import com.jalizadeh.sbia.client.payload.InstagramLogPayload;
 import com.jalizadeh.sbia.client.payload.InstagramUserPayload;
 import com.jalizadeh.sbia.client.repository.InstagramLogRepository;
@@ -76,15 +79,20 @@ public class ReportController {
 			}
 
 			analyzedUser = analyzedData.getAnalyzedUser();
-			InstagramUserModel userModel = convertUserPayloadToUserMode(analyzedUser);
+			InstagramUserModel userModel = convertUserPayloadToUserModel(analyzedUser);
 			iUserRepository.save(userModel);
 
 			logList = analyzedData.getLogs();
 			List<InstagramLogModel> logsModel = convertLogListPayloadToLogModel(logList);
 			iLogRepository.saveAll(logsModel);
 
+			//temp - reverse list
+			List<InstagramFeedPayload> feedList = analyzedData.getFeed();
+			Collections.reverse(feedList);
+			
 			model.put("user", userModel);
 			model.put("logs", logsModel);
+			model.put("feedList", feedList);
 			return "report";
 		}
 
@@ -108,7 +116,7 @@ public class ReportController {
 
 		// updated data -> update dbUser
 		analyzedUser = analyzedData.getAnalyzedUser();
-		InstagramUserModel updatedUser = convertUserPayloadToUserMode(analyzedUser);
+		InstagramUserModel updatedUser = convertUserPayloadToUserModel(analyzedUser);
 		updatedUser.setId(dbUser.getId());
 
 		// update ONLY recent log
@@ -152,7 +160,7 @@ public class ReportController {
 		return logs;
 	}
 
-	private InstagramUserModel convertUserPayloadToUserMode(InstagramUserPayload user) {
+	private InstagramUserModel convertUserPayloadToUserModel(InstagramUserPayload user) {
 		return new InstagramUserModel(null, user.getPk(), user.getUsername(), user.getFullName(), user.isPrivate(),
 				user.isVerified(), user.isBusiness(), user.getFollowers(), user.getFollowings(), user.getUploads(),
 				user.getUsertags(), user.getBiography(), user.getCategory(), user.getExternalUrl(),

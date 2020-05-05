@@ -1,4 +1,4 @@
-package com.jalizadeh.sbia.client.shared;
+package com.jalizadeh.sbia.client.utility;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

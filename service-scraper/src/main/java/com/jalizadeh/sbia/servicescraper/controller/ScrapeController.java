@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.brunocvcunha.instagram4j.Instagram4j;
 import org.brunocvcunha.instagram4j.requests.InstagramSearchUsernameRequest;
+import org.brunocvcunha.instagram4j.requests.InstagramUserFeedRequest;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedResult;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,34 +16,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ScrapeController {
 	
+	private InstagramSearchUsernameResult user;
+	
 	@Autowired
 	private Instagram4j instagram;
 
-	@GetMapping("/scrapeByUsername/{username}")
-	public InstagramSearchUsernameResult scrapeByUsername(@PathVariable String username) 
+	@GetMapping("/scrapeUserByUsername/{username}")
+	public InstagramSearchUsernameResult scrapeUserByUsername(@PathVariable String username) 
 			throws ClientProtocolException, IOException {
-		/*
-		InstagramSearchUsernameResult userResult = 
-				instagram.sendRequest(new InstagramSearchUsernameRequest(username));
-		InstagramUser user = userResult.getUser();
-		*/
+		this.user = instagram.sendRequest(new InstagramSearchUsernameRequest(username));
 		
-		/*
-		InstagramLogsDao ildao = InstagramLogsDao.builder()
-			.instagram_userid(user.getPk())
-			.instagram_username(user.getUsername())
-			.followers(new Long(user.getFollower_count()))
-			.followings(new Long(user.getFollowing_count()))
-			.uploads(new Long(user.getMedia_count()))
-			.last_check_date(new Date())
-			.build();
-		
-		instagramLogsRepository.save(ildao);
-		*/
-		
-		return instagram.sendRequest(new InstagramSearchUsernameRequest(username));
+		return this.user;
 	}
 	
+	
+	@GetMapping("/scrapeFeedByUsername/{username}")
+	public InstagramFeedResult scrapeFeedByUsername(@PathVariable String username) 
+			throws ClientProtocolException, IOException {
+
+		return instagram.sendRequest(new InstagramUserFeedRequest(this.user.getUser().getPk()));
+	}
+	
+
+	
+	// ----- Method ---------------
 	
 	public static String getMediaIdFromCode(String mediaCode) {
 		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
