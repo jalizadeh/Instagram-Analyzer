@@ -2,6 +2,7 @@ package com.jalizadeh.sbia.serviceanalyzer.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -56,9 +57,15 @@ public class AnalyzeController {
 	long totalMentionCount = 0L;
 	
 
-	// when a request comes from client, I should check for:
-	// 1. if is there any data of this user
-	// 2. is there any fresh (within 1 hour) data of user
+	/**
+	 * when a request comes from client, I should check for:
+	 * 1. if is there any data of this user
+	 * 		y: go to 2
+	 * 		n: fetch first time data
+	 * 2. is there any fresh (within 1 hour) data of user
+	 * 		y: fetch from DB & return
+	 * 		n: fetch new data
+	 */
 	@GetMapping("/analyzeByUsername/{username}")
 	public ClientPayload analyzeByUsername(@PathVariable String username) {
 
@@ -69,9 +76,12 @@ public class AnalyzeController {
 		InstagramUser scrapedUser = null;
 		InstagramFeedResult scrapedFeedRaw = null;
 		List<InstagramFeedPayload> feedPayloadList = null;
+		List<InstagramLogModel> dbLogs = null;
+		List<InstagramFeedModel> dbFeeds = null;
 
 		InstagramUserModel dbUser = iUserRepository.findByUsername(username);
 
+		//if the user is not in DB, so this is the first time
 		if (dbUser == null) {
 			logger.info("This is the first time " + username + " is fetched");
 			logger.info("Fetching data for " + username);
@@ -101,13 +111,13 @@ public class AnalyzeController {
 				}
 				
 				for (InstagramFeedItem feed : scrapedFeedRaw.getItems()) {
-					InstagramFeedModel f = convertInstagramFeedItemToModel(feed);
+					InstagramFeedModel f = convertInstagramFeedItemPayloadToModel(feed);
 					feedPayloadList.add(convertInstagramFeedModelToPayload(f));
 					iFeedRepository.save(f);
 				}
 			}
 			
-			InstagramUserModel convertedUser = convertScrapedUserToUserModel(scrapedUser, now);
+			InstagramUserModel convertedUser = convertScrapedUserPayloadToUserModel(scrapedUser, now);
 			iUserRepository.save(convertedUser);
 
 			InstagramLogModel newLog = createLogModelOfScrapedUser(scrapedUser, now);
@@ -118,12 +128,13 @@ public class AnalyzeController {
 
 		logger.info("The user: " + username + " already exist in DB");
 		
-		List<InstagramLogModel> dbLogs = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
+		dbLogs = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
+		dbFeeds = iFeedRepository.findByOwnerUsernameOrderByTakenAtAsc(username);
 
 		// there is fresh data
 		if (now.getTime() - dbUser.getLastCheckDate().getTime() < ONE_HOUR) {
 			logger.info("The data is fresh, no need for new check.");
-			return createClientPayload(dbUser, dbLogs);
+			return createClientPayload(dbUser, dbLogs, dbFeeds);
 		}
 
 		
@@ -132,10 +143,10 @@ public class AnalyzeController {
 		scrapedUserRaw = serviceScraperClient.scrapeUserByUsername(username);
 		scrapedUser = scrapedUserRaw.getUser();
 		
-		//? what if user doesn't exist anymore ?
+		//TODO: what if user doesn't exist anymore?		
 
 		InstagramLogModel newLog = createLogModelOfScrapedUser(scrapedUser, now);
-		InstagramUserModel updatedUser = convertScrapedUserToUserModel(scrapedUser, now);
+		InstagramUserModel updatedUser = convertScrapedUserPayloadToUserModel(scrapedUser, now);
 		updatedUser.setId(dbUser.getId());
 
 		//is there any previous log for Today?
@@ -154,7 +165,33 @@ public class AnalyzeController {
 		}
 		
 		List<InstagramLogModel> allLogs = iLogRepository.findByPkOrderByLastCheckDateDesc(dbUser.getPk());
-		return createClientPayload(updatedUser, allLogs);
+		
+		scrapedFeedRaw = serviceScraperClient.scrapeFeedByUsername(username);
+		if(scrapedFeedRaw.getNum_results() > 0) {
+			feedPayloadList = new ArrayList<>();
+			
+			//I need these data for calculating ratio and ER
+			for (InstagramFeedItem feed : scrapedFeedRaw.getItems()) {
+				totalLikeCount += feed.getLike_count();
+				totalCommentCount += feed.getComment_count();
+				totalViewCount += feed.getView_count();
+				totalHashtagCount += countHashtags(feed);
+				totalMentionCount += countMentions(feed);
+			}
+			
+			//delete all previous feed
+			iFeedRepository.deleteByOwnerUsername(username);
+			
+			for (InstagramFeedItem feed : scrapedFeedRaw.getItems()) {
+				InstagramFeedModel f = convertInstagramFeedItemPayloadToModel(feed);
+				feedPayloadList.add(convertInstagramFeedModelToPayload(f));
+				iFeedRepository.save(f);
+			}
+		}
+		
+		dbFeeds = iFeedRepository.findByOwnerUsernameOrderByTakenAtAsc(username);
+		
+		return createClientPayload(updatedUser, allLogs, dbFeeds);
 
 	}
 
@@ -168,8 +205,14 @@ public class AnalyzeController {
 				feed.getCaptionHashtagCount(), feed.getCaptionHashtagRatio(), 
 				feed.getCaptionMentionCount(), feed.getCaptionMentionRatio());
 	}
+	
+	
+	private InstagramLogPayload convertInstagramLogModelToPayload(InstagramLogModel log) {
+		return new InstagramLogPayload(log.getPk(), log.getUsername(), log.getFollowers(),
+				log.getFollowings(), log.getUploads(), log.getLastCheckDate());
+	}
 		
-	private InstagramFeedModel convertInstagramFeedItemToModel(InstagramFeedItem feed) {
+	private InstagramFeedModel convertInstagramFeedItemPayloadToModel(InstagramFeedItem feed) {
 		
 		long hashtagCount = countHashtags(feed);
 		long mentionCount = countMentions(feed);
@@ -240,27 +283,38 @@ public class AnalyzeController {
 	}
 	
 
-	private ClientPayload createClientPayload(InstagramUserModel user, List<InstagramLogModel> dbLogs) {
+	//Models should be converted to payloads
+	private ClientPayload createClientPayload(InstagramUserModel user, 
+			List<InstagramLogModel> dbLogs, List<InstagramFeedModel> dbFeeds) {
 		List<InstagramLogPayload> logList = new ArrayList<>();
-
+		List<InstagramFeedPayload> feedList = new ArrayList<>();
+		
 		for (InstagramLogModel log : dbLogs) {
-			logList.add(new InstagramLogPayload(log.getPk(), log.getUsername(),
-					log.getFollowers(), log.getFollowings(), log.getUploads(), log.getLastCheckDate()));
+			logList.add(convertInstagramLogModelToPayload(log));
+		}
+		
+		for (InstagramFeedModel feed : dbFeeds) {
+			feedList.add(convertInstagramFeedModelToPayload(feed));			
 		}
 
-		return new ClientPayload(convertUserModelToPayload(user), logList, null);
+		return new ClientPayload(convertUserModelToPayload(user), logList, feedList);
 	}
 
+	
 	// If this is the first time that this profile is checked, there is only 1 log
 	// available
 	private ClientPayload createFirstTimeClientPayload(InstagramUserModel user, 
 			InstagramLogModel log, List<InstagramFeedPayload> feedPayloadList) {
 		List<InstagramLogPayload> logList = new ArrayList<>();
-		logList.add(new InstagramLogPayload(log.getPk(), log.getUsername(), log.getFollowers(),
-				log.getFollowings(), log.getUploads(), log.getLastCheckDate()));
+		logList.add(convertInstagramLogModelToPayload(log));
 
+		//reverse the list to be ordered by date
+		Collections.reverse(feedPayloadList);
+		
 		return new ClientPayload(convertUserModelToPayload(user), logList, feedPayloadList);
 	}
+
+	
 
 	private InstagramUserPayload convertUserModelToPayload(InstagramUserModel user) {
 		return new InstagramUserPayload(user.getPk(), user.getUsername(), user.getFullName(), user.isPrivate(),
@@ -276,7 +330,7 @@ public class AnalyzeController {
 				new Long(user.getFollowing_count()), new Long(user.getMedia_count()), newCheckDate);
 	}
 
-	private InstagramUserModel convertScrapedUserToUserModel(InstagramUser user, Date newCheckDate) {
+	private InstagramUserModel convertScrapedUserPayloadToUserModel(InstagramUser user, Date newCheckDate) {
 		return new InstagramUserModel(null, user.getPk(), user.getUsername(), user.getFull_name(), user.is_private(),
 				user.is_verified(), user.is_business(), user.getFollower_count(), user.getFollowing_count(),
 				user.getMedia_count(), user.getUsertags_count(), user.getBiography(), user.getCategory(),

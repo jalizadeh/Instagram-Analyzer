@@ -11,4 +11,6 @@ public interface InstagramUserRepository extends  JpaRepository<InstagramUserMod
 	InstagramUserModel findByUsername(String username);
 	
 	InstagramUserModel findByUsernameAndLastCheckDateBetween(String username, Date start, Date end);
+	
+	void deleteByUsername(String username);
 }
