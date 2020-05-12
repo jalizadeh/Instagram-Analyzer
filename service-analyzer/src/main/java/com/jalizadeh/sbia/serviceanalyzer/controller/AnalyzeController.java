@@ -137,7 +137,6 @@ public class AnalyzeController {
 			return createClientPayload(dbUser, dbLogs, dbFeeds);
 		}
 
-		
 		logger.info("Data is old, refersh data and update user & log");
 
 		scrapedUserRaw = serviceScraperClient.scrapeUserByUsername(username);
